@@ -1,5 +1,6 @@
 FROM gcc:4.9
 COPY . /NetworkingProject
+ADD ./include/* /NetworkingProject/include/
 WORKDIR /NetworkingProject
-RUN g++ --o application main.cpp
-CMD ["./application"]
+RUN make
+CMD [./application server"]

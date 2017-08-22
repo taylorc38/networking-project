@@ -23,9 +23,11 @@ void Server::start() {
 
      m_waitForClientsThread = std::make_unique<std::thread>([=] { waitForClients(); });
      m_runThread = std::make_unique<std::thread>([=] { run(); });
+     m_listenerThread = std::make_unique<std::thread>([=] { listen(); });
 
      m_waitForClientsThread->detach();
      m_runThread->detach();
+     m_listenerThread->detach();
 
      while (true) {}
 }
@@ -34,11 +36,26 @@ void Server::waitForClients() {
      while (true) {
           auto client = std::make_unique<sf::TcpSocket>();
           if (m_listener->accept(*client) != sf::Socket::Done) {
-               std::printf("Error accepting client\n");
+               std::cout << "Error accepting client" << std::endl;
           } else {
                m_socket = std::move(client);
-               std::printf("Client connected to server\n");
+               std::cout << "Client connected to server" << std::endl;
           }
+     }
+}
+
+void Server::listen() {
+     std::cout << "Listening for packets..." << std::endl;
+     sf::Packet packet;
+     std::string strData;
+     while (true) {
+          if (m_socket->receive(packet) != sf::Socket::Done) {
+               // std::cout << "Error receiving packet" << std::endl;
+               continue;
+          }
+          packet >> strData;
+          std::cout << strData << std::endl;
+          packet.clear();
      }
 }
 
@@ -47,7 +64,7 @@ void Server::run() {
      while(true) {
         sf::Time elapsed = clock.getElapsedTime();
         if (elapsed.asSeconds() >= 3) {
-             std::printf("Pinging clients\n");
+             std::cout << "Pinging clients" << std::endl;
              pingClients();
              clock.restart();
         }
@@ -56,8 +73,8 @@ void Server::run() {
 
 void Server::pingClients() {
      sf::Packet packet;
-     packet << "Hello world";
+     packet << "Hello client";
      if (m_socket->send(packet) != sf::Socket::Done) {
-          std::printf("Error sending packet\n");
+          std::cout << "Error sending packet" << std::endl;
      }
 }

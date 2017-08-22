@@ -18,6 +18,7 @@ private:
 
      void listen();
      void run();
+     void pingServer();
 };
 
 #endif

@@ -24,16 +24,18 @@ void Client::start() {
 
 // Listen for data from the server
 void Client::listen() {
-     std::printf("Listening for packets...\n");
+     std::cout << "Listening for packets..." << std::endl;
      sf::Packet packet;
      std::string strData;
      while (true) {
           if (m_socket->receive(packet) != sf::Socket::Done) {
-               std::printf("Error receiving packet");
+               // std::printf("Error receiving packet");
+               continue;
           }
           packet >> strData;
-          std::printf("Data received: ");
-          std::printf(strData.c_str());
+          std::cout << strData << std::endl;
+          packet.clear();
+          pingServer();
      }
 }
 
@@ -41,5 +43,13 @@ void Client::listen() {
 void Client::run() {
      while (true) {
           // do stuff with window
+     }
+}
+
+void Client::pingServer() {
+     sf::Packet packet;
+     packet << "Hello server";
+     if (m_socket->send(packet) != sf::Socket::Done) {
+          // error
      }
 }

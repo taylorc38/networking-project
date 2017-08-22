@@ -17,8 +17,10 @@ private:
      std::unique_ptr<sf::TcpListener> m_listener;
      std::unique_ptr<std::thread> m_waitForClientsThread;
      std::unique_ptr<std::thread> m_runThread;
+     std::unique_ptr<std::thread> m_listenerThread;
 
      void waitForClients();
+     void listen();
      void run();
      void pingClients();
 };

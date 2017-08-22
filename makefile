@@ -2,7 +2,13 @@ OBJS = main.o server.o client.o
 APP_DIR = .
 APP = application
 CC = g++
-CFLAGS = -c -pthread -std=c++14 -I/usr/local/Cellar/sfml/2.4.2/include
+
+# Uncomment for Linux compile
+# CFLAGS = -c -std=c++14 -I./include/SFML-2.4.2-linux/include
+# LFLAGS = -L./include/SFML-2.4.2-linux/lib -lsfml-network -lsfml-system
+
+# Uncomment for osx compile
+CFLAGS = -c -std=c++14 -I/usr/local/Cellar/sfml/2.4.2/include
 LFLAGS = -L/usr/local/Cellar/sfml/2.4.2/lib/ -lsfml-graphics -lsfml-window -lsfml-system -lsfml-network
 
 application: $(OBJS)
