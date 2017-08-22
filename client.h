@@ -19,7 +19,6 @@ private:
      std::unique_ptr<std::thread> m_listenerThread;
 
      void listen();
-     void run();
      void pingServer();
 };
 
