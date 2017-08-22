@@ -2,6 +2,8 @@
 #define CLIENT_H
 
 #include <SFML/Network.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 #include <memory>
 #include <thread>
 #include <iostream>

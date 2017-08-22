@@ -35,15 +35,41 @@ void Client::listen() {
           packet >> strData;
           std::cout << strData << std::endl;
           packet.clear();
-          pingServer();
      }
 }
 
 // Game loop
 void Client::run() {
-     while (true) {
-          // do stuff with window
-     }
+     // do stuff with window
+     sf::ContextSettings settings;
+     settings.antialiasingLevel = 8;
+     sf::RenderWindow window(sf::VideoMode(800, 600), "ClientServerProject", sf::Style::Default, settings);
+
+     while (window.isOpen()) {
+          // Check all the window's events that were triggered since the last iteration of the loop
+         sf::Event event;
+         while (window.pollEvent(event)) {
+              // Run the event through relevant systems
+              switch (event.type) {
+                   case sf::Event::KeyPressed:
+                         if (event.key.code == sf::Keyboard::Key::A) {
+                              if (m_socket) {
+                                   std::cout << "A pressed - Pinging server" << std::endl;
+                                   pingServer();
+                              }
+                         }
+                   break;
+                   case sf::Event::Closed:
+                         window.close();
+                   break;
+              }
+         }
+         // Clear the window with black color
+         window.clear(sf::Color::Black);
+         // draw things here
+         // end the current frame to display the things we just drew
+         window.display();
+    }
 }
 
 void Client::pingServer() {
