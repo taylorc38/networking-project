@@ -5,6 +5,7 @@
 #include <memory>
 #include <iostream>
 #include <thread>
+#include <vector>
 
 class Server {
 public:
@@ -13,14 +14,16 @@ public:
      void start();
 private:
      unsigned short m_port;
-     std::unique_ptr<sf::TcpSocket> m_socket;
+     // std::unique_ptr<sf::TcpSocket> m_socket;
+     std::vector<std::unique_ptr<sf::TcpSocket>> m_clients;
+
      std::unique_ptr<sf::TcpListener> m_listener;
+     // std::unique_ptr<std::thread> m_listenerThread;
      std::unique_ptr<std::thread> m_waitForClientsThread;
-     std::unique_ptr<std::thread> m_runThread;
-     std::unique_ptr<std::thread> m_listenerThread;
+     // std::unique_ptr<std::thread> m_runThread;
 
      void waitForClients();
-     void listen();
+     void listen(int);
      void run();
      void pingClients();
 };

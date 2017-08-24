@@ -1,13 +1,19 @@
 #ifndef GAME_H
 #define GAME_H
 
-#include "client.h"
+#include <SFML/Network.hpp>
+#include <SFML/Window.hpp>
+#include <SFML/Graphics.hpp>
 
-class Game {
+#include "client.h"
+#include "clientCallbackInterface.h"
+
+class Game : public ClientCallbackInterface {
 public:
      Game();
      Game(const std::string, const unsigned short);
      void start();
+     void onPacketReceived(sf::Packet);
 private:
      std::string m_ip;
      unsigned short m_port;

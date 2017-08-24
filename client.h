@@ -2,6 +2,7 @@
 #define CLIENT_H
 
 #include "clientCallbackInterface.h"
+
 #include <SFML/Network.hpp>
 #include <memory>
 #include <thread>
@@ -9,14 +10,16 @@
 
 class Client {
 public:
-     Client(std::string, unsigned short port);
+     Client(std::string, unsigned short port, ClientCallbackInterface*);
+     ~Client();
      void start();
 private:
      std::string m_ip;
      unsigned short m_port;
+     bool m_isRunning;
      std::unique_ptr<sf::TcpSocket> m_socket;
      std::unique_ptr<std::thread> m_listenerThread;
-     std::unique_ptr<ClientCallbackInterface> m_clientCallbackInterface;
+     ClientCallbackInterface *m_callbackTarget;
 
      void listen();
      void pingServer();

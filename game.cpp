@@ -11,7 +11,7 @@ Game::Game(const std::string ip, const unsigned short port) {
 }
 
 void Game::start() {
-     m_client = std::make_unique<Client>(m_ip, m_port);
+     m_client = std::make_unique<Client>(m_ip, m_port, this);
      m_client->start();
      run();
 }
@@ -30,7 +30,7 @@ void Game::run() {
               switch (event.type) {
                    case sf::Event::KeyPressed:
                          if (event.key.code == sf::Keyboard::Key::A) {
-                              
+
                          }
                    break;
                    case sf::Event::Closed:
@@ -44,4 +44,10 @@ void Game::run() {
          // end the current frame to display the things we just drew
          window.display();
     }
+}
+
+void Game::onPacketReceived(sf::Packet packet) {
+     std::string strData;
+     packet >> strData;
+     std::cout << "Received packet through callback: " << strData << std::endl;
 }

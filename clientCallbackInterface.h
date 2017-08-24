@@ -1,11 +1,13 @@
 #ifndef CLIENT_CALLBACK_INTERFACE_H
 #define CLIENT_CALLBACK_INTERFACE_H
 
-#include <string>
+#include <SFML/Network.hpp>
 
 class ClientCallbackInterface {
 public:
-     virtual void onPacketReceived(std::string) = 0;
+     virtual void onPacketReceived(sf::Packet) {
+          throw "onPacketReceived not implemented";
+     }
 };
 
 #endif

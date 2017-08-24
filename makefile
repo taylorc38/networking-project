@@ -39,7 +39,7 @@ client_app: $(CLIENT_OBJS)
 main_client.o: main_client.cpp game.h
 	$(CC) $(CFLAGS) main_client.cpp
 
-game.o: game.cpp client.h
+game.o: game.cpp client.h clientCallbackInterface.h
 	$(CC) $(CFLAGS) game.cpp
 
 client.o: client.cpp
