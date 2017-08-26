@@ -32,11 +32,17 @@ void Server::waitForClients() {
                std::cout << "Error accepting client" << std::endl;
           } else {
                std::cout << "Client connected to server: client id " << m_currId << std::endl;
+               // Add this client to our m_clients vector
                ClientEntity client(m_currId, &p_client);
-               m_currId++;
                m_clients.push_back(std::move(client));
+
+               // Tell the client any info it needs to know up front, like client id
+               int clientIndex = m_clients.size() - 1;
+               clientHandshake(clientIndex, m_currId);
+               m_currId++;
+
                // Each connected client should have its own listen thread
-               std::thread listenerThread([=] { listen(m_clients.size() - 1); });
+               std::thread listenerThread([=] { listen(clientIndex); });
                listenerThread.detach();
           }
      }
@@ -65,6 +71,15 @@ void Server::run() {
              clock.restart();
         }
     }
+}
+
+void Server::clientHandshake(int clientIndex, int clientId) {
+     sf::Packet packet;
+     packet << "handshake";
+     packet << clientId;
+     if (m_clients[clientIndex].clientSocket->send(packet) != sf::Socket::Done) {
+          std::cout << "Error sending handshake to client " << clientId << std::endl;
+     }
 }
 
 void Server::pingClients() {

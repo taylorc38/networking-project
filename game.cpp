@@ -47,7 +47,15 @@ void Game::run() {
 }
 
 void Game::onPacketReceived(sf::Packet packet) {
-     std::string strData;
-     packet >> strData;
-     std::cout << "Received packet through callback: " << strData << std::endl;
+     std::string command;
+     packet >> command;
+     if (command == "handshake") {
+          int client_id;
+          packet >> client_id;
+          std::cout << "Client id received: " << client_id << std::endl;
+          m_client->setId(client_id);
+     } // else if (...) 
+     else {
+          std::cout << "Unknown command received: " << command << std::endl;
+     }
 }

@@ -25,6 +25,7 @@ private:
      void waitForClients();
      void listen(int);
      void run();
+     void clientHandshake(int, int);
      void pingClients();
 };
 

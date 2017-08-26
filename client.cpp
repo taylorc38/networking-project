@@ -30,7 +30,6 @@ void Client::start() {
 void Client::listen() {
      std::cout << "Listening for packets..." << std::endl;
      sf::Packet packet;
-     std::string strData;
      while (true) {
           if (m_socket->receive(packet) != sf::Socket::Done) {
                continue;
