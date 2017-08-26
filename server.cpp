@@ -1,11 +1,10 @@
 #include "server.h"
 
-// TODO instead of storing sf::TcpSockets in m_clients, store a struct with client metadata as well as the pointer
-
 Server::Server(unsigned short port) {
      m_port = port;
+     m_currId = 1;
      m_listener = std::make_unique<sf::TcpListener>();
-     m_clients = std::vector<std::unique_ptr<sf::TcpSocket>>();
+     m_clients = std::vector<ClientEntity>();
 }
 
 Server::~Server() {
@@ -14,7 +13,6 @@ Server::~Server() {
 }
 
 void Server::start() {
-     std::cout << "Server starting..." << std::endl;
      if (m_listener->listen(m_port) != sf::Socket::Done) {
           std::cout << "Error listening to port " << m_port << std::endl;
           return;
@@ -27,13 +25,16 @@ void Server::start() {
 }
 
 void Server::waitForClients() {
+     std::cout << "Waiting for clients..." << std::endl;
      while (true) {
           auto p_client = std::make_unique<sf::TcpSocket>();
           if (m_listener->accept(*p_client) != sf::Socket::Done) {
                std::cout << "Error accepting client" << std::endl;
           } else {
-               std::cout << "Client connected to server" << std::endl;
-               m_clients.push_back(std::move(p_client));
+               std::cout << "Client connected to server: client id " << m_currId << std::endl;
+               ClientEntity client(m_currId, &p_client);
+               m_currId++;
+               m_clients.push_back(std::move(client));
                // Each connected client should have its own listen thread
                std::thread listenerThread([=] { listen(m_clients.size() - 1); });
                listenerThread.detach();
@@ -45,7 +46,7 @@ void Server::listen(int clientIndex) {
      sf::Packet packet;
      std::string strData;
      while (true) {
-          if (m_clients[clientIndex]->receive(packet) != sf::Socket::Done) {
+          if (m_clients[clientIndex].clientSocket->receive(packet) != sf::Socket::Done) {
                continue;
           }
           packet >> strData;
@@ -71,7 +72,7 @@ void Server::pingClients() {
      packet << "Hello client";
 
      for (int i = 0; i < m_clients.size(); i++) {
-          if (m_clients[i]->send(packet) != sf::Socket::Done) {
+          if (m_clients[i].clientSocket->send(packet) != sf::Socket::Done) {
                std::cout << "Error sending packet to client" << std::endl;
           }
      }

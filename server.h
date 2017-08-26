@@ -7,6 +7,8 @@
 #include <thread>
 #include <vector>
 
+#include "clientEntity.h"
+
 class Server {
 public:
      Server(unsigned short port);
@@ -14,13 +16,11 @@ public:
      void start();
 private:
      unsigned short m_port;
-     // std::unique_ptr<sf::TcpSocket> m_socket;
-     std::vector<std::unique_ptr<sf::TcpSocket>> m_clients;
+     unsigned short m_currId;
+     std::vector<ClientEntity> m_clients;
 
      std::unique_ptr<sf::TcpListener> m_listener;
-     // std::unique_ptr<std::thread> m_listenerThread;
      std::unique_ptr<std::thread> m_waitForClientsThread;
-     // std::unique_ptr<std::thread> m_runThread;
 
      void waitForClients();
      void listen(int);
